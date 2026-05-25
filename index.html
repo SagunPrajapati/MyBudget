@@ -7,153 +7,138 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --primary:#E8531E;--dark:#2c3e5e;--light-bg:#f4f6fb;--card:#fff;
-  --border:#e0e4ed;--green:#2a9d8f;--red:#e63946;--muted:#888;--radius:12px;
+  --primary:#E8531E;--dark:#2c3e5e;--green:#2a9d8f;--red:#e63946;--muted:#888;
+  --bg:#f4f6fb;--card:#fff;--border:#e0e4ed;--radius:10px;
 }
-body{font-family:'Segoe UI',Arial,sans-serif;background:var(--light-bg);color:#222;min-height:100vh}
-/* HEADER */
-header{background:var(--dark);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-header h1{font-size:1.1rem;font-weight:700}
-header .sub{font-size:.72rem;opacity:.7}
-.tab-btn{background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:.8rem;cursor:pointer;transition:background .2s}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#222;min-height:100vh;font-size:14px}
+header{background:var(--dark);color:#fff;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+header h1{font-size:1rem;font-weight:700}
+.header-right{display:flex;align-items:center;gap:8px}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#aaa;display:inline-block}
+.sync-dot.ok{background:#2a9d8f}.sync-dot.err{background:#e63946}.sync-dot.busy{background:#f4a261;animation:pulse .8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.header-tabs{display:flex;gap:5px}
+.tab-btn{background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:7px;padding:6px 11px;font-size:.78rem;cursor:pointer}
 .tab-btn.active,.tab-btn:hover{background:var(--primary)}
-.header-tabs{display:flex;gap:6px}
-/* FILTER BAR */
-.filter-bar{background:var(--dark);display:flex;gap:10px;padding:8px 18px;align-items:center;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.1)}
-.filter-bar label{color:#ccc;font-size:.76rem}
-.filter-bar select{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:4px 9px;font-size:.82rem;cursor:pointer}
-.filter-bar select option{background:var(--dark)}
-/* TABS */
-.tab{display:none;padding:14px;max-width:1100px;margin:0 auto}
+.filter-bar{background:#1e2d46;display:flex;gap:10px;padding:7px 14px;align-items:center;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.08)}
+.filter-bar label{color:#aaa;font-size:.73rem}
+.filter-bar select{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:5px;padding:3px 8px;font-size:.78rem;cursor:pointer}
+.filter-bar select option{background:#1e2d46;color:#fff}
+.tab{display:none;padding:12px;max-width:1000px;margin:0 auto}
 .tab.active{display:block}
-/* CARD */
-.card{background:var(--card);border-radius:var(--radius);box-shadow:0 2px 10px rgba(0,0,0,.07);padding:16px;margin-bottom:14px}
-.card-title{font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
-/* KPI */
-.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
-.kpi{background:var(--card);border-radius:var(--radius);box-shadow:0 2px 10px rgba(0,0,0,.07);padding:14px;text-align:center}
-.kpi-label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-.kpi-value{font-size:1.4rem;font-weight:700;margin-top:3px}
-.kpi-value.orange{color:var(--primary)}.kpi-value.green{color:var(--green)}.kpi-value.dark{color:var(--dark)}.kpi-value.red{color:var(--red)}
-/* CHARTS */
-.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-@media(max-width:580px){.charts-row{grid-template-columns:1fr}}
-.chart-wrap{height:210px;position:relative}
-/* SECTION TITLE */
-.sec-title{font-size:.95rem;font-weight:700;color:var(--primary);margin:18px 0 8px;display:flex;align-items:center;gap:6px}
-/* BUDGET TABLE */
-.btable{width:100%;border-collapse:collapse;font-size:.83rem}
-.btable th{background:var(--dark);color:#fff;padding:7px 9px;text-align:left;font-size:.72rem;text-transform:uppercase}
-.btable td{padding:7px 9px;border-bottom:1px solid var(--border)}
+.card{background:#fff;border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px}
+.card-title{font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:9px;margin-bottom:12px}
+.kpi{background:#fff;border:0.5px solid var(--border);border-radius:var(--radius);padding:12px;text-align:center}
+.kpi-label{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.kpi-val{font-size:1.3rem;font-weight:700;margin-top:2px}
+.kpi-val.orange{color:var(--primary)}.kpi-val.green{color:var(--green)}.kpi-val.dark{color:var(--dark)}.kpi-val.red{color:var(--red)}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+@media(max-width:560px){.charts-row{grid-template-columns:1fr}}
+.chart-wrap{height:190px;position:relative}
+.sec-title{font-size:.9rem;font-weight:700;color:var(--primary);margin:14px 0 7px;display:flex;align-items:center;gap:5px}
+.btable{width:100%;border-collapse:collapse;font-size:.8rem}
+.btable th{background:var(--dark);color:#fff;padding:6px 8px;text-align:left;font-size:.68rem;text-transform:uppercase}
+.btable td{padding:6px 8px;border-bottom:1px solid var(--border)}
 .btable tr:hover td{background:#f0f3f9}
 .btable .tot td{font-weight:700;background:#eef1f8}
-.pos{color:var(--green);font-weight:600}.neg{color:var(--red);font-weight:600}.zero{color:var(--muted)}
-.plan-inp{width:85px;border:1px solid var(--border);border-radius:5px;padding:3px 6px;font-size:.82rem;text-align:right;background:#fffbe6}
+.pos{color:var(--green);font-weight:600}.neg{color:var(--red);font-weight:600}
+.plan-inp{width:80px;border:1px solid var(--border);border-radius:4px;padding:3px 5px;font-size:.78rem;text-align:right;background:#fffbe6}
 .plan-inp:focus{outline:2px solid var(--primary);border-color:var(--primary)}
-/* PROGRESS */
-.prog-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:.78rem}
-.prog-label{width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
-.prog-wrap{flex:1;background:#e9ecef;border-radius:99px;height:7px;overflow:hidden}
-.prog-fill{height:100%;border-radius:99px;transition:width .4s}
+.prog-wrap{flex:1;background:#e9ecef;border-radius:99px;height:6px;overflow:hidden}
+.prog-fill{height:100%;border-radius:99px}
 .prog-fill.exp{background:var(--primary)}.prog-fill.inc{background:var(--green)}
-.prog-val{width:65px;text-align:right;font-size:.76rem}
-/* TRANS */
-.add-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.add-btn{background:var(--primary);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:.85rem;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:5px}
-.add-btn:hover{background:#c0421a}
-.add-btn.inc{background:var(--green)}.add-btn.inc:hover{background:#218277}
-.ttable{width:100%;border-collapse:collapse;font-size:.82rem}
-.ttable th{background:var(--dark);color:#fff;padding:7px 9px;text-align:left;font-size:.7rem;text-transform:uppercase;position:sticky;top:0}
-.ttable td{padding:7px 9px;border-bottom:1px solid var(--border);vertical-align:middle}
+.add-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.add-btn{background:var(--primary);color:#fff;border:none;border-radius:7px;padding:8px 14px;font-size:.82rem;cursor:pointer;font-weight:600}
+.add-btn:hover{opacity:.88}
+.add-btn.inc{background:var(--green)}
+.add-btn.neutral{background:var(--dark)}
+.ttable{width:100%;border-collapse:collapse;font-size:.79rem}
+.ttable th{background:var(--dark);color:#fff;padding:6px 8px;text-align:left;font-size:.67rem;text-transform:uppercase}
+.ttable td{padding:6px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
 .ttable tr:hover td{background:#f5f7fc}
-.badge{display:inline-block;padding:2px 7px;border-radius:99px;font-size:.7rem;font-weight:600}
-.badge.exp{background:#fde8df;color:var(--primary)}.badge.inc{background:#d4f1ed;color:var(--green)}
-.del-btn{background:none;border:none;color:#ccc;cursor:pointer;font-size:.95rem;padding:2px 5px;border-radius:4px}
+.badge{display:inline-block;padding:2px 6px;border-radius:99px;font-size:.67rem;font-weight:600}
+.badge.expense{background:#fde8df;color:var(--primary)}.badge.income{background:#d4f1ed;color:var(--green)}
+.del-btn{background:none;border:none;color:#ccc;cursor:pointer;font-size:.88rem;padding:2px 4px;border-radius:3px}
 .del-btn:hover{color:var(--red);background:#fde8df}
-.empty{text-align:center;color:var(--muted);padding:36px;font-size:.88rem}
-/* MODAL */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center}
+.empty{text-align:center;color:var(--muted);padding:30px;font-size:.84rem}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:flex-start;justify-content:center;padding-top:80px}
 .overlay.open{display:flex}
-.modal{background:#fff;border-radius:var(--radius);padding:22px;width:94%;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,.18);animation:up .2s ease}
-@keyframes up{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal h2{font-size:.95rem;font-weight:700;margin-bottom:14px;color:var(--dark)}
-.fg{margin-bottom:11px}
-.fg label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:3px;font-weight:600}
-.fg input,.fg select{width:100%;border:1px solid var(--border);border-radius:7px;padding:8px 11px;font-size:.88rem;background:#fafbfd}
-.fg input:focus,.fg select:focus{outline:none;border-color:var(--primary);background:#fff}
-.mactions{display:flex;gap:8px;margin-top:16px}
-.mactions button{flex:1;padding:9px;border-radius:7px;border:none;font-size:.88rem;font-weight:600;cursor:pointer}
+.modal{background:#fff;border-radius:var(--radius);padding:18px;width:94%;max-width:370px;box-shadow:0 8px 32px rgba(0,0,0,.18);animation:up .2s ease}
+@keyframes up{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal h2{font-size:.9rem;font-weight:700;margin-bottom:12px;color:var(--dark)}
+.fg{margin-bottom:9px}
+.fg label{display:block;font-size:.72rem;color:var(--muted);margin-bottom:2px;font-weight:600}
+.fg input,.fg select{width:100%;border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:.84rem;background:#fafbfd}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--primary)}
+.mactions{display:flex;gap:7px;margin-top:13px}
+.mactions button{flex:1;padding:8px;border-radius:6px;border:none;font-size:.84rem;font-weight:600;cursor:pointer}
 .btn-cancel{background:#f0f3f9;color:var(--dark)}.btn-cancel:hover{background:#e0e4ed}
 .btn-save{background:var(--primary);color:#fff}.btn-save.inc{background:var(--green)}.btn-save:hover{opacity:.88}
-/* NEPALI CAL */
-.npcal{margin-top:5px;border:1px solid var(--border);border-radius:7px;overflow:hidden;display:none}
+.npcal{margin-top:4px;border:1px solid var(--border);border-radius:6px;overflow:hidden;display:none}
 .npcal.open{display:block}
-.npcal-nav{background:var(--dark);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:7px 11px}
-.npcal-nav button{background:none;border:none;color:#fff;font-size:1.1rem;cursor:pointer;padding:0 3px}
-.npcal-nav span{font-size:.85rem;font-weight:600}
+.npcal-nav{background:var(--dark);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:6px 10px}
+.npcal-nav button{background:none;border:none;color:#fff;font-size:1rem;cursor:pointer;padding:0 2px}
+.npcal-nav span{font-size:.8rem;font-weight:600}
 .npcal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
-.dhead{background:#eef1f8;text-align:center;padding:4px 1px;font-size:.67rem;font-weight:700;color:var(--muted)}
-.dcell{text-align:center;padding:6px 1px;font-size:.8rem;cursor:pointer;border-radius:3px}
+.dhead{background:#eef1f8;text-align:center;padding:3px 1px;font-size:.62rem;font-weight:700;color:var(--muted)}
+.dcell{text-align:center;padding:5px 1px;font-size:.76rem;cursor:pointer;border-radius:2px}
 .dcell:hover{background:var(--primary);color:#fff}
 .dcell.sel{background:var(--dark);color:#fff;font-weight:700}
 .dcell.emp{cursor:default}
-.date-disp{font-size:.78rem;color:var(--primary);margin-top:3px;font-weight:600;min-height:16px}
-/* SETTINGS */
-.set-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:560px){.set-grid{grid-template-columns:1fr}}
+.date-disp{font-size:.74rem;color:var(--primary);margin-top:2px;font-weight:600;min-height:14px}
+.set-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.set-grid{grid-template-columns:1fr}}
 .cat-list{list-style:none}
-.cat-list li{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.83rem}
+.cat-list li{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:.8rem}
 .cat-list li:last-child{border-bottom:none}
-.add-cat{display:flex;gap:7px;margin-top:9px}
-.add-cat input{flex:1;border:1px solid var(--border);border-radius:5px;padding:6px 9px;font-size:.83rem}
-.add-cat button{background:var(--dark);color:#fff;border:none;border-radius:5px;padding:6px 11px;cursor:pointer;font-size:.83rem}
+.add-cat{display:flex;gap:6px;margin-top:8px}
+.add-cat input{flex:1;border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:.79rem}
+.add-cat button{background:var(--dark);color:#fff;border:none;border-radius:4px;padding:5px 10px;cursor:pointer;font-size:.79rem}
 .bal-wrap{display:flex;align-items:center;gap:7px;margin-top:5px}
-.bal-wrap span{font-weight:700;font-size:.95rem;color:var(--dark)}
-.bal-wrap input{border:1px solid var(--border);border-radius:7px;padding:7px 11px;font-size:.95rem;font-weight:700;width:140px;text-align:right;background:#fffbe6}
-.save-btn{background:var(--dark);color:#fff;border:none;border-radius:7px;padding:7px 13px;cursor:pointer;font-size:.83rem}
-/* TOAST */
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:#fff;padding:9px 20px;border-radius:99px;font-size:.83rem;z-index:999;opacity:0;transition:all .3s;pointer-events:none}
+.bal-wrap input{border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:.9rem;font-weight:700;width:130px;text-align:right}
+.save-btn{background:var(--dark);color:#fff;border:none;border-radius:6px;padding:6px 11px;cursor:pointer;font-size:.79rem}
+.toast{position:fixed;bottom:14px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:#fff;padding:8px 18px;border-radius:99px;font-size:.79rem;z-index:999;opacity:0;transition:all .3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-/* LOADER */
 .loader{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--muted);font-size:.88rem;gap:10px}
-.spinner{width:20px;height:20px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite}
+.spinner{width:18px;height:18px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ══════════════ HEADER ══════════════ -->
 <header>
-  <div>
-    <h1>🗓 नेपाली Monthly Budget</h1>
-    <div class="sub" id="headerSub">Connecting to Google Sheets…</div>
-  </div>
-  <div class="header-tabs">
-    <button class="tab-btn active" onclick="switchTab('summary')">Summary</button>
-    <button class="tab-btn" onclick="switchTab('transactions')">Transactions</button>
-    <button class="tab-btn" onclick="switchTab('settings')">Settings</button>
+  <div><h1>🗓 नेपाली Monthly Budget</h1></div>
+  <div class="header-right">
+    <span class="sync-dot busy" id="syncDot" title="Connecting..."></span>
+    <div class="header-tabs">
+      <button class="tab-btn active" onclick="switchTab('summary',this)">Summary</button>
+      <button class="tab-btn" onclick="switchTab('transactions',this)">Transactions</button>
+      <button class="tab-btn" onclick="switchTab('settings',this)">Settings</button>
+    </div>
   </div>
 </header>
 
-<!-- FILTER BAR -->
+<!-- ══════════════ FILTER BAR ══════════════ -->
 <div class="filter-bar">
   <label>BS Year:</label>
   <select id="filterYear" onchange="onFilterChange()"></select>
   <label>BS Month:</label>
   <select id="filterMonth" onchange="onFilterChange()"></select>
-  <span id="syncStatus" style="margin-left:auto;font-size:.72rem;color:#aaa"></span>
+  <button class="tab-btn" style="margin-left:auto;font-size:.72rem;padding:4px 10px" onclick="loadAll()">⟳ Refresh</button>
 </div>
 
-<!-- SUMMARY TAB -->
+<!-- ══════════════ SUMMARY TAB ══════════════ -->
 <div id="tab-summary" class="tab active">
-  <div id="summaryContent"><div class="loader"><div class="spinner"></div>Loading from Google Sheets…</div></div>
+  <div class="loader"><div class="spinner"></div>Loading from Supabase…</div>
 </div>
 
-<!-- TRANSACTIONS TAB -->
+<!-- ══════════════ TRANSACTIONS TAB ══════════════ -->
 <div id="tab-transactions" class="tab">
   <div class="add-row">
-    <button class="add-btn" onclick="openModal('expense')">＋ Add Expense</button>
-    <button class="add-btn inc" onclick="openModal('income')">＋ Add Income</button>
+    <button class="add-btn" onclick="openModal('expense')">+ Add Expense</button>
+    <button class="add-btn inc" onclick="openModal('income')">+ Add Income</button>
   </div>
   <div class="card" style="overflow-x:auto">
     <table class="ttable">
@@ -162,28 +147,36 @@ header .sub{font-size:.72rem;opacity:.7}
       </tr></thead>
       <tbody id="transBody"></tbody>
     </table>
-    <div id="transEmpty" class="empty" style="display:none">No transactions yet. Add your first one!</div>
+    <div id="transEmpty" class="empty" style="display:none">No transactions for this month yet.</div>
   </div>
 </div>
 
-<!-- SETTINGS TAB -->
+<!-- ══════════════ SETTINGS TAB ══════════════ -->
 <div id="tab-settings" class="tab">
   <div class="card">
     <div class="card-title">Starting Balance</div>
     <div class="bal-wrap">
-      <span>रू</span>
+      <span style="font-weight:700">रू</span>
       <input type="number" id="startBal" min="0" value="0">
-      <button class="save-btn" onclick="saveStartingBalance()">Save to Sheet</button>
+      <button class="save-btn" onclick="saveStartingBalance()">Save</button>
     </div>
   </div>
   <div class="set-grid">
     <div class="card">
       <div class="card-title">Expense Categories</div>
       <ul class="cat-list" id="expCatList"></ul>
+      <div class="add-cat">
+        <input type="text" id="newExpCat" placeholder="New category">
+        <button onclick="addCat('exp')">Add</button>
+      </div>
     </div>
     <div class="card">
       <div class="card-title">Income Categories</div>
       <ul class="cat-list" id="incCatList"></ul>
+      <div class="add-cat">
+        <input type="text" id="newIncCat" placeholder="New category">
+        <button onclick="addCat('inc')">Add</button>
+      </div>
     </div>
   </div>
   <div class="sec-title">📋 Planned Budgets</div>
@@ -197,16 +190,12 @@ header .sub{font-size:.72rem;opacity:.7}
       <div id="plannedIncForm"></div>
     </div>
   </div>
-  <div style="text-align:center;margin-top:14px">
-    <button class="add-btn" style="display:inline-flex;margin:0 auto" onclick="savePlanned()">💾 Save Planned to Sheet</button>
-  </div>
-  <div class="card" style="margin-top:14px;text-align:center">
-    <div class="card-title">Sync</div>
-    <button onclick="loadAll()" class="add-btn" style="display:inline-flex;margin:0 auto;background:var(--dark)">🔄 Refresh from Google Sheets</button>
+  <div style="text-align:center;margin-top:12px">
+    <button class="add-btn" onclick="savePlanned()">💾 Save Planned Budgets</button>
   </div>
 </div>
 
-<!-- MODAL -->
+<!-- ══════════════ MODAL ══════════════ -->
 <div class="overlay" id="modal">
   <div class="modal">
     <h2 id="modalTitle">Add Expense</h2>
@@ -237,99 +226,596 @@ header .sub{font-size:.72rem;opacity:.7}
     </div>
     <div class="mactions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-save" id="saveBtn" onclick="saveTransaction()">Save to Sheet</button>
+      <button class="btn-save" id="saveBtn" onclick="saveTransaction()">Save</button>
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
+<!-- ══════════════ TOAST ══════════════ -->
 <div class="toast" id="toast"></div>
 
-<!-- CHART.JS -->
+<!-- ══════════════ SCRIPTS ══════════════ -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
 <script>
-// ══════════════════════════════════════════════════════════════
-// CONFIG — replace with your deployed Web App URL
-// ══════════════════════════════════════════════════════════════
-const API = 'YOUR_WEB_APP_URL_HERE';
 
-// ══════════════════════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════════════════════
-let CONFIG = {
-  startBal: 0, bsYear: 2083, bsMonth: 'Baisakh',
-  expCats: [], incCats: [], expPlanned: {}, incPlanned: {}
+// ══════════════════════════════════════════════════════
+// SUPABASE CONFIG  ← replace if you ever change project
+// ══════════════════════════════════════════════════════
+const SUPA_URL = 'https://umvmrvndegevwtasbdkx.supabase.co';
+const SUPA_KEY = 'sb_publishable_jB_2Spre5FtqFeB-i5lEkQ_bavkiiSY';
+const HEADERS  = {
+  'Content-Type' : 'application/json',
+  'apikey'       : SUPA_KEY,
+  'Authorization': 'Bearer ' + SUPA_KEY
 };
-let TRANSACTIONS = [];
-let modalType    = 'expense';
-let expChart     = null;
-let incChart     = null;
 
-// ══════════════════════════════════════════════════════════════
-// NEPALI CALENDAR
-// ══════════════════════════════════════════════════════════════
-const BS_MONTHS = ['Baisakh','Jestha','Ashadh','Shrawan','Bhadra','Ashwin',
-                   'Kartik','Mangsir','Poush','Magh','Falgun','Chaitra'];
-const BS_DATA   = {
-  2075:[31,32,31,32,31,30,30,30,29,30,29,31],2076:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2077:[31,31,32,32,31,30,30,29,30,29,30,30],2078:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2079:[31,31,31,32,31,31,29,30,29,30,29,31],2080:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2081:[31,31,32,32,31,30,30,29,30,29,30,30],2082:[31,32,31,32,31,30,30,30,29,30,29,31],
-  2083:[31,31,32,31,31,30,30,30,29,30,29,31],2084:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2085:[31,31,32,32,31,30,30,29,30,29,30,30],2086:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2087:[30,32,31,32,31,30,30,30,29,30,29,31],2088:[31,31,32,31,31,30,30,30,29,30,29,31],
-  2089:[31,31,32,31,31,31,30,29,30,29,30,30],2090:[31,32,31,32,31,30,30,29,30,29,30,30]
+// ══════════════════════════════════════════════════════
+// SUPABASE REST HELPERS
+// ══════════════════════════════════════════════════════
+async function sbGet(table, params = '') {
+  const r = await fetch(`${SUPA_URL}/rest/v1/${table}?${params}`, {
+    headers: { ...HEADERS, 'Accept': 'application/json' }
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function sbPost(table, body) {
+  const r = await fetch(`${SUPA_URL}/rest/v1/${table}`, {
+    method : 'POST',
+    headers: { ...HEADERS, 'Prefer': 'return=representation' },
+    body   : JSON.stringify(body)
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function sbPatch(table, params, body) {
+  const r = await fetch(`${SUPA_URL}/rest/v1/${table}?${params}`, {
+    method : 'PATCH',
+    headers: { ...HEADERS, 'Prefer': 'return=representation' },
+    body   : JSON.stringify(body)
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function sbDelete(table, params) {
+  const r = await fetch(`${SUPA_URL}/rest/v1/${table}?${params}`, {
+    method : 'DELETE',
+    headers: HEADERS
+  });
+  if (!r.ok) throw new Error(await r.text());
+}
+
+// ══════════════════════════════════════════════════════
+// NEPALI (BS) CALENDAR ENGINE
+// ══════════════════════════════════════════════════════
+const BS_MONTHS = [
+  'Baisakh','Jestha','Ashadh','Shrawan','Bhadra','Ashwin',
+  'Kartik','Mangsir','Poush','Magh','Falgun','Chaitra'
+];
+
+const BS_DATA = {
+  2075:[31,32,31,32,31,30,30,30,29,30,29,31],
+  2076:[31,31,32,31,31,31,30,29,30,29,30,30],
+  2077:[31,31,32,32,31,30,30,29,30,29,30,30],
+  2078:[31,32,31,32,31,30,30,30,29,29,30,31],
+  2079:[31,31,31,32,31,31,29,30,29,30,29,31],
+  2080:[31,31,32,31,31,31,30,29,30,29,30,30],
+  2081:[31,31,32,32,31,30,30,29,30,29,30,30],
+  2082:[31,32,31,32,31,30,30,30,29,30,29,31],
+  2083:[31,31,32,31,31,30,30,30,29,30,29,31],
+  2084:[31,31,32,31,31,31,30,29,30,29,30,30],
+  2085:[31,31,32,32,31,30,30,29,30,29,30,30],
+  2086:[31,32,31,32,31,30,30,30,29,29,30,31]
 };
-const ANCHOR_Y=2083,ANCHOR_WD=2; // 1 Baisakh 2083 = Tuesday
 
-function bsDIM(y,m){return(BS_DATA[y]||BS_DATA[2083])[m-1]||30}
-function totalDays(y,m){
-  let d=0;
-  for(let yr=ANCHOR_Y;yr<y;yr++){(BS_DATA[yr]||BS_DATA[2083]).forEach(x=>d+=x)}
-  for(let mo=1;mo<m;mo++)d+=bsDIM(y,mo);
+const ANCHOR_Y  = 2083;  // 1 Baisakh 2083
+const ANCHOR_WD = 2;     // = Tuesday
+
+function bsDIM(y, m) {
+  return (BS_DATA[y] || BS_DATA[2083])[m - 1] || 30;
+}
+
+function totalDaysFromAnchor(y, m) {
+  let d = 0;
+  for (let yr = ANCHOR_Y; yr < y; yr++)
+    (BS_DATA[yr] || BS_DATA[2083]).forEach(x => d += x);
+  for (let mo = 1; mo < m; mo++) d += bsDIM(y, mo);
   return d;
 }
-function startWD(y,m){return(ANCHOR_WD+totalDays(y,m))%7}
-function todayBS(){
-  const now=new Date(),anchor=new Date(2026,3,14);
-  let rem=Math.floor((now-anchor)/86400000),y=2083,m=1;
-  while(rem>0){const d=bsDIM(y,m);if(rem<d){return{y,m,d:1+rem};} rem-=d;m++;if(m>12){m=1;y++;}}
-  return{y,m,d:1};
+
+function startWeekday(y, m) {
+  return (ANCHOR_WD + totalDaysFromAnchor(y, m)) % 7;
 }
 
-let calY,calM,selY,selM,selD;
-function initCal(){const t=todayBS();calY=t.y;calM=t.m;selY=null;selM=null;selD=null;}
-function renderCal(){
-  document.getElementById('calLbl').textContent=BS_MONTHS[calM-1]+' '+calY;
-  const g=document.getElementById('calGrid'); g.innerHTML='';
-  ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d=>{const h=document.createElement('div');h.className='dhead';h.textContent=d;g.appendChild(h);});
-  const sw=startWD(calY,calM);
-  for(let i=0;i<sw;i++){const e=document.createElement('div');e.className='dcell emp';g.appendChild(e);}
-  const days=bsDIM(calY,calM);
-  for(let d=1;d<=days;d++){
-    const c=document.createElement('div');c.className='dcell';
-    if(selY===calY&&selM===calM&&selD===d)c.classList.add('sel');
-    c.textContent=d;c.onclick=()=>pickDay(d);g.appendChild(c);
+function todayBS() {
+  const now    = new Date();
+  const anchor = new Date(2026, 3, 14); // 14 April 2026 = 1 Baisakh 2083
+  let rem = Math.floor((now - anchor) / 86400000);
+  let y = 2083, m = 1;
+  while (rem >= 0) {
+    const d = bsDIM(y, m);
+    if (rem < d) return { y, m, d: 1 + rem };
+    rem -= d; m++;
+    if (m > 12) { m = 1; y++; }
+  }
+  return { y: 2083, m: 1, d: 1 };
+}
+
+// ══════════════════════════════════════════════════════
+// APPLICATION STATE
+// ══════════════════════════════════════════════════════
+let STATE = {
+  startBal  : 0,
+  expCats   : ['Food','Transport','Rent','Health','Education','Entertainment','Shopping','Other'],
+  incCats   : ['Salary','Business','Freelance','Investment','Other'],
+  expPlanned: {},
+  incPlanned: {}
+};
+let TRANSACTIONS = [];
+let curY, curM;
+let modalType = 'expense';
+let expChart = null, incChart = null;
+
+// calendar picker state
+let calY, calM, selY, selM, selD;
+
+// ══════════════════════════════════════════════════════
+// SYNC DOT
+// ══════════════════════════════════════════════════════
+function setSyncDot(s) {
+  const d = document.getElementById('syncDot');
+  d.className = 'sync-dot ' + s;
+  d.title = { ok:'Synced', err:'Error', busy:'Syncing…' }[s] || '';
+}
+
+// ══════════════════════════════════════════════════════
+// LOAD ALL DATA FROM SUPABASE
+// ══════════════════════════════════════════════════════
+async function loadAll() {
+  setSyncDot('busy');
+  try {
+    // Load config
+    const cfg = await sbGet('budget_config', 'id=eq.1');
+    if (cfg && cfg.length) {
+      const c = cfg[0];
+      STATE.startBal   = c.start_bal   || 0;
+      STATE.expCats    = c.exp_cats    || STATE.expCats;
+      STATE.incCats    = c.inc_cats    || STATE.incCats;
+      STATE.expPlanned = c.exp_planned || {};
+      STATE.incPlanned = c.inc_planned || {};
+    }
+    // Load transactions
+    TRANSACTIONS = await sbGet('transactions', 'order=created_at.asc');
+    setSyncDot('ok');
+    renderAll();
+  } catch (e) {
+    setSyncDot('err');
+    toast('Connection error: ' + e.message);
+    document.getElementById('tab-summary').innerHTML = `
+      <div class="card" style="color:var(--red);text-align:center;padding:30px">
+        <b>Could not connect to Supabase</b><br>
+        <small style="color:var(--muted)">${e.message}</small><br><br>
+        <button class="add-btn" onclick="loadAll()">Retry</button>
+      </div>`;
   }
 }
-function calPrev(e){if(e)e.preventDefault();calM--;if(calM<1){calM=12;calY--;}renderCal();}
-function calNext(e){if(e)e.preventDefault();calM++;if(calM>12){calM=1;calY++;}renderCal();}
-function pickDay(d){
-  selY=calY;selM=calM;selD=d;
-  const s=calY+'/'+String(calM).padStart(2,'0')+'/'+String(d).padStart(2,'0');
-  document.getElementById('txDate').value=s;
-  document.getElementById('dateDisp').textContent=d+' '+BS_MONTHS[calM-1]+' '+calY;
+
+// ══════════════════════════════════════════════════════
+// SAVE CONFIG TO SUPABASE
+// ══════════════════════════════════════════════════════
+async function saveConfig() {
+  setSyncDot('busy');
+  try {
+    await sbPatch('budget_config', 'id=eq.1', {
+      start_bal   : STATE.startBal,
+      exp_cats    : STATE.expCats,
+      inc_cats    : STATE.incCats,
+      exp_planned : STATE.expPlanned,
+      inc_planned : STATE.incPlanned
+    });
+    setSyncDot('ok');
+  } catch (e) {
+    setSyncDot('err');
+    toast('Save error: ' + e.message);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// FILTER BAR
+// ══════════════════════════════════════════════════════
+function initFilters() {
+  const fy = document.getElementById('filterYear');
+  const fm = document.getElementById('filterMonth');
+  fy.innerHTML = ''; fm.innerHTML = '';
+  for (let y = 2079; y <= 2086; y++) {
+    const o = document.createElement('option');
+    o.value = y; o.textContent = y;
+    if (y === curY) o.selected = true;
+    fy.appendChild(o);
+  }
+  BS_MONTHS.forEach((m, i) => {
+    const o = document.createElement('option');
+    o.value = i + 1; o.textContent = m;
+    if (i + 1 === curM) o.selected = true;
+    fm.appendChild(o);
+  });
+}
+
+function onFilterChange() {
+  curY = parseInt(document.getElementById('filterYear').value);
+  curM = parseInt(document.getElementById('filterMonth').value);
+  renderAll();
+}
+
+// ══════════════════════════════════════════════════════
+// TAB SWITCHING
+// ══════════════════════════════════════════════════════
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════
+function filteredTxns() {
+  return TRANSACTIONS.filter(t => {
+    const [y, m] = t.date.split('/').map(Number);
+    return y === curY && m === curM;
+  });
+}
+
+function fmt(n) {
+  return 'रू ' + Math.round(n).toLocaleString();
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER ALL
+// ══════════════════════════════════════════════════════
+function renderAll() {
+  renderSummary();
+  renderTransactions();
+  renderSettings();
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER SUMMARY TAB
+// ══════════════════════════════════════════════════════
+function renderSummary() {
+  const txns   = filteredTxns();
+  const totExp = txns.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
+  const totInc = txns.filter(t => t.type === 'income' ).reduce((s, t) => s + Number(t.amount), 0);
+  const bal     = STATE.startBal + totInc - totExp;
+  const savings = totInc - totExp;
+
+  let html = `
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-label">Total Income</div><div class="kpi-val green">${fmt(totInc)}</div></div>
+    <div class="kpi"><div class="kpi-label">Total Expense</div><div class="kpi-val orange">${fmt(totExp)}</div></div>
+    <div class="kpi"><div class="kpi-label">Balance</div><div class="kpi-val dark">${fmt(bal)}</div></div>
+    <div class="kpi"><div class="kpi-label">Net Savings</div><div class="kpi-val ${savings >= 0 ? 'green' : 'red'}">${fmt(savings)}</div></div>
+  </div>
+  <div class="charts-row">
+    <div class="card"><div class="card-title">Expense by Category</div><div class="chart-wrap"><canvas id="expChart"></canvas></div></div>
+    <div class="card"><div class="card-title">Income by Category</div><div class="chart-wrap"><canvas id="incChart"></canvas></div></div>
+  </div>`;
+
+  // build category totals
+  const expByCat = {}, incByCat = {};
+  STATE.expCats.forEach(c => expByCat[c] = 0);
+  STATE.incCats.forEach(c => incByCat[c] = 0);
+  txns.forEach(t => {
+    if (t.type === 'expense') expByCat[t.category] = (expByCat[t.category] || 0) + Number(t.amount);
+    else                      incByCat[t.category] = (incByCat[t.category] || 0) + Number(t.amount);
+  });
+
+  // expense vs planned table
+  html += `<div class="sec-title">📊 Expense vs Planned</div>
+  <div class="card"><table class="btable">
+    <thead><tr><th>Category</th><th>Actual</th><th>Planned</th><th>Variance</th><th style="width:90px">Progress</th></tr></thead>
+    <tbody>`;
+  let aE = 0, pE = 0;
+  STATE.expCats.forEach(c => {
+    const act  = expByCat[c] || 0;
+    const plan = STATE.expPlanned[c] || 0;
+    const diff = plan - act;
+    aE += act; pE += plan;
+    const pct = plan > 0 ? Math.min(100, Math.round(act / plan * 100)) : 0;
+    html += `<tr>
+      <td>${c}</td><td>${fmt(act)}</td>
+      <td><input class="plan-inp" type="number" value="${plan}"
+          onchange="STATE.expPlanned['${c}']=parseFloat(this.value)||0"></td>
+      <td class="${diff >= 0 ? 'pos' : 'neg'}">${fmt(Math.abs(diff))} ${diff >= 0 ? '▲' : '▼'}</td>
+      <td><div class="prog-wrap"><div class="prog-fill exp" style="width:${pct}%"></div></div></td>
+    </tr>`;
+  });
+  html += `<tr class="tot"><td>Total</td><td>${fmt(aE)}</td><td>${fmt(pE)}</td>
+    <td class="${pE - aE >= 0 ? 'pos' : 'neg'}">${fmt(Math.abs(pE - aE))}</td><td></td></tr>
+  </tbody></table></div>`;
+
+  // income vs planned table
+  html += `<div class="sec-title">💰 Income vs Planned</div>
+  <div class="card"><table class="btable">
+    <thead><tr><th>Category</th><th>Actual</th><th>Planned</th><th>Variance</th><th style="width:90px">Progress</th></tr></thead>
+    <tbody>`;
+  let aI = 0, pI = 0;
+  STATE.incCats.forEach(c => {
+    const act  = incByCat[c] || 0;
+    const plan = STATE.incPlanned[c] || 0;
+    const diff = act - plan;
+    aI += act; pI += plan;
+    const pct = plan > 0 ? Math.min(100, Math.round(act / plan * 100)) : 0;
+    html += `<tr>
+      <td>${c}</td><td>${fmt(act)}</td>
+      <td><input class="plan-inp" type="number" value="${plan}"
+          onchange="STATE.incPlanned['${c}']=parseFloat(this.value)||0"></td>
+      <td class="${diff >= 0 ? 'pos' : 'neg'}">${fmt(Math.abs(diff))} ${diff >= 0 ? '▲' : '▼'}</td>
+      <td><div class="prog-wrap"><div class="prog-fill inc" style="width:${pct}%"></div></div></td>
+    </tr>`;
+  });
+  html += `<tr class="tot"><td>Total</td><td>${fmt(aI)}</td><td>${fmt(pI)}</td>
+    <td class="${aI - pI >= 0 ? 'pos' : 'neg'}">${fmt(Math.abs(aI - pI))}</td><td></td></tr>
+  </tbody></table></div>`;
+
+  document.getElementById('tab-summary').innerHTML = html;
+
+  // charts
+  if (expChart) expChart.destroy();
+  if (incChart) incChart.destroy();
+  const colors = ['#E8531E','#2a9d8f','#2c3e5e','#e63946','#f4a261','#457b9d','#a8dadc','#1d3557'];
+  const chartOpts = {
+    plugins: { legend: { position:'bottom', labels:{ font:{size:10}, padding:8 } } },
+    cutout: '65%', responsive: true, maintainAspectRatio: false
+  };
+  const expL = Object.keys(expByCat).filter(k => expByCat[k] > 0);
+  const incL = Object.keys(incByCat).filter(k => incByCat[k] > 0);
+  const ec = document.getElementById('expChart');
+  const ic = document.getElementById('incChart');
+  if (ec) expChart = new Chart(ec, { type:'doughnut', data:{
+    labels: expL.length ? expL : ['No data'],
+    datasets:[{ data: expL.length ? expL.map(l => expByCat[l]) : [1],
+                backgroundColor: expL.length ? colors.slice(0, expL.length) : ['#eee'] }]
+  }, options: chartOpts });
+  if (ic) incChart = new Chart(ic, { type:'doughnut', data:{
+    labels: incL.length ? incL : ['No data'],
+    datasets:[{ data: incL.length ? incL.map(l => incByCat[l]) : [1],
+                backgroundColor: incL.length ? colors.slice(0, incL.length) : ['#eee'] }]
+  }, options: chartOpts });
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER TRANSACTIONS TAB
+// ══════════════════════════════════════════════════════
+function renderTransactions() {
+  const txns  = filteredTxns().slice().reverse();
+  const tbody = document.getElementById('transBody');
+  const empty = document.getElementById('transEmpty');
+  if (!tbody) return;
+  if (!txns.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  tbody.innerHTML = txns.map(t => `<tr>
+    <td>${t.date}</td>
+    <td><span class="badge ${t.type}">${t.type === 'expense' ? 'Exp' : 'Inc'}</span></td>
+    <td style="font-weight:600;color:${t.type==='expense'?'var(--primary)':'var(--green)'}">
+      रू ${Number(t.amount).toLocaleString()}</td>
+    <td>${t.description || '-'}</td>
+    <td>${t.category}</td>
+    <td><button class="del-btn" onclick="deleteTx('${t.id}')">✕</button></td>
+  </tr>`).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER SETTINGS TAB
+// ══════════════════════════════════════════════════════
+function renderSettings() {
+  const el = document.getElementById('startBal');
+  if (el) el.value = STATE.startBal;
+
+  const el2 = document.getElementById('expCatList');
+  const el3 = document.getElementById('incCatList');
+  if (el2) el2.innerHTML = STATE.expCats.map(c =>
+    `<li>${c}<button class="del-btn" onclick="delCat('exp','${c}')">✕</button></li>`).join('');
+  if (el3) el3.innerHTML = STATE.incCats.map(c =>
+    `<li>${c}<button class="del-btn" onclick="delCat('inc','${c}')">✕</button></li>`).join('');
+
+  const ef  = document.getElementById('plannedExpForm');
+  const inf = document.getElementById('plannedIncForm');
+  if (ef) ef.innerHTML = STATE.expCats.map(c => `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:.8rem">
+      <span>${c}</span>
+      <input class="plan-inp" type="number" value="${STATE.expPlanned[c] || 0}"
+             onchange="STATE.expPlanned['${c}']=parseFloat(this.value)||0">
+    </div>`).join('');
+  if (inf) inf.innerHTML = STATE.incCats.map(c => `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;font-size:.8rem">
+      <span>${c}</span>
+      <input class="plan-inp" type="number" value="${STATE.incPlanned[c] || 0}"
+             onchange="STATE.incPlanned['${c}']=parseFloat(this.value)||0">
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// SETTINGS ACTIONS
+// ══════════════════════════════════════════════════════
+async function saveStartingBalance() {
+  STATE.startBal = parseFloat(document.getElementById('startBal').value) || 0;
+  await saveConfig();
+  renderSummary();
+  toast('Starting balance saved!');
+}
+
+async function addCat(type) {
+  const inp = document.getElementById(type === 'exp' ? 'newExpCat' : 'newIncCat');
+  const val = inp.value.trim();
+  if (!val) return;
+  if (type === 'exp') { if (!STATE.expCats.includes(val)) STATE.expCats.push(val); }
+  else               { if (!STATE.incCats.includes(val)) STATE.incCats.push(val); }
+  inp.value = '';
+  await saveConfig();
+  renderSettings();
+  toast('Category added!');
+}
+
+async function delCat(type, cat) {
+  if (type === 'exp') STATE.expCats = STATE.expCats.filter(c => c !== cat);
+  else                STATE.incCats = STATE.incCats.filter(c => c !== cat);
+  await saveConfig();
+  renderSettings();
+}
+
+async function savePlanned() {
+  await saveConfig();
+  toast('Planned budgets saved!');
+  renderSummary();
+}
+
+// ══════════════════════════════════════════════════════
+// DELETE TRANSACTION
+// ══════════════════════════════════════════════════════
+async function deleteTx(id) {
+  setSyncDot('busy');
+  try {
+    await sbDelete('transactions', 'id=eq.' + id);
+    TRANSACTIONS = TRANSACTIONS.filter(t => t.id !== id);
+    setSyncDot('ok');
+    renderAll();
+    toast('Transaction deleted');
+  } catch (e) {
+    setSyncDot('err');
+    toast('Delete error: ' + e.message);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// MODAL — ADD TRANSACTION
+// ══════════════════════════════════════════════════════
+function openModal(type) {
+  modalType = type;
+  document.getElementById('modalTitle').textContent = type === 'expense' ? 'Add Expense' : 'Add Income';
+  const sb = document.getElementById('saveBtn');
+  sb.textContent = 'Save';
+  sb.className = 'btn-save' + (type === 'income' ? ' inc' : '');
+  const cats = type === 'expense' ? STATE.expCats : STATE.incCats;
+  document.getElementById('txCat').innerHTML = cats.map(c => `<option>${c}</option>`).join('');
+  document.getElementById('txDate').value = '';
+  document.getElementById('dateDisp').textContent = '';
+  document.getElementById('txAmt').value = '';
+  document.getElementById('txDesc').value = '';
+  document.getElementById('npcal').classList.remove('open');
+  const t = todayBS();
+  calY = t.y; calM = t.m; selY = null; selM = null; selD = null;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+async function saveTransaction() {
+  const date = document.getElementById('txDate').value;
+  const amt  = parseFloat(document.getElementById('txAmt').value);
+  const desc = document.getElementById('txDesc').value.trim();
+  const cat  = document.getElementById('txCat').value;
+  if (!date)       { toast('Please pick a date!'); return; }
+  if (!amt || amt <= 0) { toast('Please enter a valid amount!'); return; }
+  setSyncDot('busy');
+  const btn = document.getElementById('saveBtn');
+  btn.textContent = 'Saving…'; btn.disabled = true;
+  try {
+    const rows = await sbPost('transactions', {
+      type: modalType, date, amount: amt, description: desc, category: cat
+    });
+    TRANSACTIONS.push(rows[0]);
+    setSyncDot('ok');
+    closeModal();
+    renderAll();
+    toast((modalType === 'expense' ? 'Expense' : 'Income') + ' saved!');
+  } catch (e) {
+    setSyncDot('err');
+    toast('Save error: ' + e.message);
+  } finally {
+    btn.textContent = 'Save'; btn.disabled = false;
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// NEPALI CALENDAR PICKER
+// ══════════════════════════════════════════════════════
+function renderCal() {
+  document.getElementById('calLbl').textContent = BS_MONTHS[calM - 1] + ' ' + calY;
+  const g = document.getElementById('calGrid');
+  g.innerHTML = '';
+  ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d => {
+    const h = document.createElement('div');
+    h.className = 'dhead'; h.textContent = d; g.appendChild(h);
+  });
+  const sw = startWeekday(calY, calM);
+  for (let i = 0; i < sw; i++) {
+    const e = document.createElement('div');
+    e.className = 'dcell emp'; g.appendChild(e);
+  }
+  for (let d = 1; d <= bsDIM(calY, calM); d++) {
+    const c = document.createElement('div');
+    c.className = 'dcell';
+    if (selY === calY && selM === calM && selD === d) c.classList.add('sel');
+    c.textContent = d;
+    c.onclick = () => pickDay(d);
+    g.appendChild(c);
+  }
+}
+
+function calPrev(e) {
+  e.preventDefault();
+  calM--; if (calM < 1) { calM = 12; calY--; }
+  renderCal();
+}
+
+function calNext(e) {
+  e.preventDefault();
+  calM++; if (calM > 12) { calM = 1; calY++; }
+  renderCal();
+}
+
+function pickDay(d) {
+  selY = calY; selM = calM; selD = d;
+  document.getElementById('txDate').value =
+    calY + '/' + String(calM).padStart(2,'0') + '/' + String(d).padStart(2,'0');
+  document.getElementById('dateDisp').textContent =
+    d + ' ' + BS_MONTHS[calM - 1] + ' ' + calY;
   document.getElementById('npcal').classList.remove('open');
   renderCal();
 }
-function toggleCal(){
-  const c=document.getElementById('npcal');c.classList.toggle('open');
-  if(c.classList.contains('open'))renderCal();
+
+function toggleCal() {
+  const c = document.getElementById('npcal');
+  c.classList.toggle('open');
+  if (c.classList.contains('open')) renderCal();
 }
 
-// ══════════════════════════════════════════════════════════════
-// API CALLS
-// ══════════════════════════════════════════════════════════════
-async function apiGet(action){
-  const r=await fetch(`${API}?action=${
+// ══════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+const today = todayBS();
+curY = today.y;
+curM = today.m;
+initFilters();
+loadAll();
+
+</script>
+</body>
+</html>
