@@ -3,249 +3,121 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Monthly Budget - नेपाली बजेट</title>
+<title>नेपाली Monthly Budget</title>
 <style>
-  /* ── RESET & BASE ── */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --primary:   #E8531E;
-    --dark:      #2c3e5e;
-    --light-bg:  #f4f6fb;
-    --card-bg:   #ffffff;
-    --border:    #e0e4ed;
-    --text:      #222;
-    --muted:     #888;
-    --green:     #2a9d8f;
-    --red:       #e63946;
-    --radius:    12px;
-  }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--light-bg); color: var(--text); min-height: 100vh; }
-
-  /* ── HEADER ── */
-  header {
-    background: var(--dark);
-    color: #fff;
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  }
-  header h1 { font-size: 1.2rem; font-weight: 700; }
-  header .sub { font-size: 0.75rem; opacity: 0.7; }
-  .header-right { display: flex; gap: 8px; align-items: center; }
-  .tab-btn {
-    background: rgba(255,255,255,0.15);
-    color: #fff; border: none; border-radius: 8px;
-    padding: 7px 14px; font-size: 0.82rem; cursor: pointer; transition: background 0.2s;
-  }
-  .tab-btn.active, .tab-btn:hover { background: var(--primary); }
-
-  /* ── FILTER BAR ── */
-  .filter-bar {
-    background: var(--dark);
-    display: flex; gap: 12px; padding: 10px 20px; align-items: center; flex-wrap: wrap;
-  }
-  .filter-bar label { color: #ccc; font-size: 0.78rem; }
-  .filter-bar select {
-    background: rgba(255,255,255,0.12); color: #fff;
-    border: 1px solid rgba(255,255,255,0.2); border-radius: 6px;
-    padding: 5px 10px; font-size: 0.85rem; cursor: pointer;
-  }
-  .filter-bar select option { background: var(--dark); color: #fff; }
-
-  /* ── TABS ── */
-  .tab-content { display: none; padding: 16px; max-width: 1100px; margin: 0 auto; }
-  .tab-content.active { display: block; }
-
-  /* ── CARDS ── */
-  .card {
-    background: var(--card-bg); border-radius: var(--radius);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.07); padding: 18px; margin-bottom: 16px;
-  }
-  .card-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 8px; }
-
-  /* ── SUMMARY KPI ROW ── */
-  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
-  .kpi {
-    background: var(--card-bg); border-radius: var(--radius);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-    padding: 16px; text-align: center;
-  }
-  .kpi .kpi-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-  .kpi .kpi-value { font-size: 1.5rem; font-weight: 700; margin-top: 4px; }
-  .kpi .kpi-value.primary { color: var(--primary); }
-  .kpi .kpi-value.green   { color: var(--green); }
-  .kpi .kpi-value.dark    { color: var(--dark); }
-  .kpi .kpi-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
-
-  /* ── CHART CONTAINERS ── */
-  .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-  @media (max-width: 600px) { .charts-row { grid-template-columns: 1fr; } }
-  .chart-wrap { position: relative; height: 220px; }
-  canvas { width: 100% !important; height: 100% !important; }
-
-  /* ── TABLES ── */
-  .section-title {
-    font-size: 1rem; font-weight: 700; color: var(--primary);
-    margin: 20px 0 10px; display: flex; align-items: center; gap: 8px;
-  }
-  .budget-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  .budget-table th {
-    background: var(--dark); color: #fff; padding: 8px 10px;
-    text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px;
-  }
-  .budget-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
-  .budget-table tr:last-child td { border-bottom: none; }
-  .budget-table tr:hover td { background: #f0f3f9; }
-  .budget-table .totals td { font-weight: 700; background: #eef1f8; }
-  .diff.pos { color: var(--green); font-weight: 600; }
-  .diff.neg { color: var(--red); font-weight: 600; }
-  .diff.zero { color: var(--muted); }
-  input[type=number].plan-input {
-    width: 90px; border: 1px solid var(--border); border-radius: 6px;
-    padding: 4px 7px; font-size: 0.85rem; text-align: right;
-    background: #fffbe6;
-  }
-  input[type=number].plan-input:focus { outline: 2px solid var(--primary); border-color: var(--primary); }
-
-  /* ── PROGRESS BARS ── */
-  .prog-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 0.8rem; }
-  .prog-row .prog-label { width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--muted); }
-  .prog-bar-wrap { flex: 1; background: #e9ecef; border-radius: 99px; height: 8px; overflow: hidden; }
-  .prog-bar { height: 100%; border-radius: 99px; transition: width 0.4s; }
-  .prog-bar.expense { background: var(--primary); }
-  .prog-bar.income  { background: var(--green); }
-  .prog-row .prog-val { width: 70px; text-align: right; font-size: 0.78rem; color: var(--text); }
-
-  /* ── TRANSACTIONS TAB ── */
-  .add-btn {
-    background: var(--primary); color: #fff; border: none;
-    border-radius: 8px; padding: 10px 18px; font-size: 0.88rem;
-    cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px;
-    margin-bottom: 14px; transition: background 0.2s;
-  }
-  .add-btn:hover { background: #c0421a; }
-  .add-btn.income-btn { background: var(--green); }
-  .add-btn.income-btn:hover { background: #218277; }
-  .trans-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
-  .trans-table th {
-    background: var(--dark); color: #fff; padding: 8px 10px;
-    text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px;
-    position: sticky; top: 56px;
-  }
-  .trans-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-  .trans-table tr:hover td { background: #f5f7fc; }
-  .badge {
-    display: inline-block; padding: 2px 8px; border-radius: 99px;
-    font-size: 0.72rem; font-weight: 600;
-  }
-  .badge.expense { background: #fde8df; color: var(--primary); }
-  .badge.income  { background: #d4f1ed; color: var(--green); }
-  .del-btn {
-    background: none; border: none; color: #ccc; cursor: pointer; font-size: 1rem; padding: 2px 6px;
-    border-radius: 4px; transition: color 0.2s;
-  }
-  .del-btn:hover { color: var(--red); background: #fde8df; }
-  .empty-state { text-align: center; color: var(--muted); padding: 40px; font-size: 0.9rem; }
-
-  /* ── MODAL (Add Transaction) ── */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.45); z-index: 200; align-items: center; justify-content: center;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: #fff; border-radius: var(--radius); padding: 24px; width: 94%; max-width: 420px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18); animation: slideUp 0.22s ease;
-  }
-  @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  .modal h2 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; color: var(--dark); }
-  .form-group { margin-bottom: 13px; }
-  .form-group label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 4px; font-weight: 600; }
-  .form-group input, .form-group select {
-    width: 100%; border: 1px solid var(--border); border-radius: 8px;
-    padding: 9px 12px; font-size: 0.9rem; background: #fafbfd;
-    transition: border-color 0.2s;
-  }
-  .form-group input:focus, .form-group select:focus {
-    outline: none; border-color: var(--primary); background: #fff;
-  }
-  .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
-  .modal-actions button { flex: 1; padding: 10px; border-radius: 8px; border: none; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
-  .btn-cancel { background: #f0f3f9; color: var(--dark); }
-  .btn-save   { background: var(--primary); color: #fff; }
-  .btn-save.income { background: var(--green); }
-  .btn-cancel:hover { background: #e0e4ed; }
-  .btn-save:hover   { opacity: 0.88; }
-
-  /* ── NEPALI DATE PICKER ── */
-  .np-cal { margin-top: 6px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; display: none; }
-  .np-cal.open { display: block; }
-  .np-cal-nav {
-    background: var(--dark); color: #fff; display: flex;
-    align-items: center; justify-content: space-between; padding: 8px 12px;
-  }
-  .np-cal-nav button { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; padding: 0 4px; }
-  .np-cal-nav span { font-size: 0.88rem; font-weight: 600; }
-  .np-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
-  .np-cal-grid .day-head {
-    background: #eef1f8; text-align: center; padding: 5px 2px;
-    font-size: 0.7rem; font-weight: 700; color: var(--muted);
-  }
-  .np-cal-grid .day-cell {
-    text-align: center; padding: 7px 2px; font-size: 0.82rem; cursor: pointer;
-    transition: background 0.15s; border-radius: 4px;
-  }
-  .np-cal-grid .day-cell:hover { background: var(--primary); color: #fff; }
-  .np-cal-grid .day-cell.selected { background: var(--dark); color: #fff; font-weight: 700; }
-  .np-cal-grid .day-cell.empty { cursor: default; }
-  .np-date-display {
-    font-size: 0.82rem; color: var(--primary); margin-top: 4px; font-weight: 600; min-height: 18px;
-  }
-
-  /* ── SETTINGS TAB ── */
-  .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media (max-width: 600px) { .settings-grid { grid-template-columns: 1fr; } }
-  .cat-list { list-style: none; }
-  .cat-list li {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem;
-  }
-  .cat-list li:last-child { border-bottom: none; }
-  .add-cat-row { display: flex; gap: 8px; margin-top: 10px; }
-  .add-cat-row input { flex: 1; border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; font-size: 0.85rem; }
-  .add-cat-row button { background: var(--dark); color: #fff; border: none; border-radius: 6px; padding: 7px 12px; cursor: pointer; font-size: 0.85rem; }
-
-  /* ── STARTING BALANCE INPUT ── */
-  .balance-input-wrap { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
-  .balance-input-wrap .currency-prefix { font-weight: 700; color: var(--dark); font-size: 1rem; }
-  .balance-input-wrap input {
-    border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px;
-    font-size: 1rem; font-weight: 700; width: 160px; text-align: right;
-    background: #fffbe6;
-  }
-  .save-bal-btn {
-    background: var(--dark); color: #fff; border: none; border-radius: 8px;
-    padding: 8px 14px; cursor: pointer; font-size: 0.85rem;
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 500px) {
-    .kpi .kpi-value { font-size: 1.2rem; }
-    .budget-table, .trans-table { font-size: 0.78rem; }
-    .budget-table th, .trans-table th, .budget-table td, .trans-table td { padding: 6px 7px; }
-    input[type=number].plan-input { width: 70px; }
-  }
-
-  /* ── TOAST ── */
-  .toast {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-    background: var(--dark); color: #fff; padding: 10px 22px; border-radius: 99px;
-    font-size: 0.85rem; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none;
-  }
-  .toast.show { opacity: 1; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#E8531E;--dark:#2c3e5e;--light-bg:#f4f6fb;--card:#fff;
+  --border:#e0e4ed;--green:#2a9d8f;--red:#e63946;--muted:#888;--radius:12px;
+}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--light-bg);color:#222;min-height:100vh}
+/* HEADER */
+header{background:var(--dark);color:#fff;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+header h1{font-size:1.1rem;font-weight:700}
+header .sub{font-size:.72rem;opacity:.7}
+.tab-btn{background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:.8rem;cursor:pointer;transition:background .2s}
+.tab-btn.active,.tab-btn:hover{background:var(--primary)}
+.header-tabs{display:flex;gap:6px}
+/* FILTER BAR */
+.filter-bar{background:var(--dark);display:flex;gap:10px;padding:8px 18px;align-items:center;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.1)}
+.filter-bar label{color:#ccc;font-size:.76rem}
+.filter-bar select{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:4px 9px;font-size:.82rem;cursor:pointer}
+.filter-bar select option{background:var(--dark)}
+/* TABS */
+.tab{display:none;padding:14px;max-width:1100px;margin:0 auto}
+.tab.active{display:block}
+/* CARD */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:0 2px 10px rgba(0,0,0,.07);padding:16px;margin-bottom:14px}
+.card-title{font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:8px}
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:var(--card);border-radius:var(--radius);box-shadow:0 2px 10px rgba(0,0,0,.07);padding:14px;text-align:center}
+.kpi-label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.kpi-value{font-size:1.4rem;font-weight:700;margin-top:3px}
+.kpi-value.orange{color:var(--primary)}.kpi-value.green{color:var(--green)}.kpi-value.dark{color:var(--dark)}.kpi-value.red{color:var(--red)}
+/* CHARTS */
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:580px){.charts-row{grid-template-columns:1fr}}
+.chart-wrap{height:210px;position:relative}
+/* SECTION TITLE */
+.sec-title{font-size:.95rem;font-weight:700;color:var(--primary);margin:18px 0 8px;display:flex;align-items:center;gap:6px}
+/* BUDGET TABLE */
+.btable{width:100%;border-collapse:collapse;font-size:.83rem}
+.btable th{background:var(--dark);color:#fff;padding:7px 9px;text-align:left;font-size:.72rem;text-transform:uppercase}
+.btable td{padding:7px 9px;border-bottom:1px solid var(--border)}
+.btable tr:hover td{background:#f0f3f9}
+.btable .tot td{font-weight:700;background:#eef1f8}
+.pos{color:var(--green);font-weight:600}.neg{color:var(--red);font-weight:600}.zero{color:var(--muted)}
+.plan-inp{width:85px;border:1px solid var(--border);border-radius:5px;padding:3px 6px;font-size:.82rem;text-align:right;background:#fffbe6}
+.plan-inp:focus{outline:2px solid var(--primary);border-color:var(--primary)}
+/* PROGRESS */
+.prog-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:.78rem}
+.prog-label{width:110px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted)}
+.prog-wrap{flex:1;background:#e9ecef;border-radius:99px;height:7px;overflow:hidden}
+.prog-fill{height:100%;border-radius:99px;transition:width .4s}
+.prog-fill.exp{background:var(--primary)}.prog-fill.inc{background:var(--green)}
+.prog-val{width:65px;text-align:right;font-size:.76rem}
+/* TRANS */
+.add-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.add-btn{background:var(--primary);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:.85rem;cursor:pointer;font-weight:600;display:flex;align-items:center;gap:5px}
+.add-btn:hover{background:#c0421a}
+.add-btn.inc{background:var(--green)}.add-btn.inc:hover{background:#218277}
+.ttable{width:100%;border-collapse:collapse;font-size:.82rem}
+.ttable th{background:var(--dark);color:#fff;padding:7px 9px;text-align:left;font-size:.7rem;text-transform:uppercase;position:sticky;top:0}
+.ttable td{padding:7px 9px;border-bottom:1px solid var(--border);vertical-align:middle}
+.ttable tr:hover td{background:#f5f7fc}
+.badge{display:inline-block;padding:2px 7px;border-radius:99px;font-size:.7rem;font-weight:600}
+.badge.exp{background:#fde8df;color:var(--primary)}.badge.inc{background:#d4f1ed;color:var(--green)}
+.del-btn{background:none;border:none;color:#ccc;cursor:pointer;font-size:.95rem;padding:2px 5px;border-radius:4px}
+.del-btn:hover{color:var(--red);background:#fde8df}
+.empty{text-align:center;color:var(--muted);padding:36px;font-size:.88rem}
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:#fff;border-radius:var(--radius);padding:22px;width:94%;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,.18);animation:up .2s ease}
+@keyframes up{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal h2{font-size:.95rem;font-weight:700;margin-bottom:14px;color:var(--dark)}
+.fg{margin-bottom:11px}
+.fg label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:3px;font-weight:600}
+.fg input,.fg select{width:100%;border:1px solid var(--border);border-radius:7px;padding:8px 11px;font-size:.88rem;background:#fafbfd}
+.fg input:focus,.fg select:focus{outline:none;border-color:var(--primary);background:#fff}
+.mactions{display:flex;gap:8px;margin-top:16px}
+.mactions button{flex:1;padding:9px;border-radius:7px;border:none;font-size:.88rem;font-weight:600;cursor:pointer}
+.btn-cancel{background:#f0f3f9;color:var(--dark)}.btn-cancel:hover{background:#e0e4ed}
+.btn-save{background:var(--primary);color:#fff}.btn-save.inc{background:var(--green)}.btn-save:hover{opacity:.88}
+/* NEPALI CAL */
+.npcal{margin-top:5px;border:1px solid var(--border);border-radius:7px;overflow:hidden;display:none}
+.npcal.open{display:block}
+.npcal-nav{background:var(--dark);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:7px 11px}
+.npcal-nav button{background:none;border:none;color:#fff;font-size:1.1rem;cursor:pointer;padding:0 3px}
+.npcal-nav span{font-size:.85rem;font-weight:600}
+.npcal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.dhead{background:#eef1f8;text-align:center;padding:4px 1px;font-size:.67rem;font-weight:700;color:var(--muted)}
+.dcell{text-align:center;padding:6px 1px;font-size:.8rem;cursor:pointer;border-radius:3px}
+.dcell:hover{background:var(--primary);color:#fff}
+.dcell.sel{background:var(--dark);color:#fff;font-weight:700}
+.dcell.emp{cursor:default}
+.date-disp{font-size:.78rem;color:var(--primary);margin-top:3px;font-weight:600;min-height:16px}
+/* SETTINGS */
+.set-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.set-grid{grid-template-columns:1fr}}
+.cat-list{list-style:none}
+.cat-list li{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:.83rem}
+.cat-list li:last-child{border-bottom:none}
+.add-cat{display:flex;gap:7px;margin-top:9px}
+.add-cat input{flex:1;border:1px solid var(--border);border-radius:5px;padding:6px 9px;font-size:.83rem}
+.add-cat button{background:var(--dark);color:#fff;border:none;border-radius:5px;padding:6px 11px;cursor:pointer;font-size:.83rem}
+.bal-wrap{display:flex;align-items:center;gap:7px;margin-top:5px}
+.bal-wrap span{font-weight:700;font-size:.95rem;color:var(--dark)}
+.bal-wrap input{border:1px solid var(--border);border-radius:7px;padding:7px 11px;font-size:.95rem;font-weight:700;width:140px;text-align:right;background:#fffbe6}
+.save-btn{background:var(--dark);color:#fff;border:none;border-radius:7px;padding:7px 13px;cursor:pointer;font-size:.83rem}
+/* TOAST */
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:#fff;padding:9px 20px;border-radius:99px;font-size:.83rem;z-index:999;opacity:0;transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* LOADER */
+.loader{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--muted);font-size:.88rem;gap:10px}
+.spinner{width:20px;height:20px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -254,9 +126,9 @@
 <header>
   <div>
     <h1>🗓 नेपाली Monthly Budget</h1>
-    <div class="sub">Personal Finance Tracker</div>
+    <div class="sub" id="headerSub">Connecting to Google Sheets…</div>
   </div>
-  <div class="header-right">
+  <div class="header-tabs">
     <button class="tab-btn active" onclick="switchTab('summary')">Summary</button>
     <button class="tab-btn" onclick="switchTab('transactions')">Transactions</button>
     <button class="tab-btn" onclick="switchTab('settings')">Settings</button>
@@ -266,118 +138,56 @@
 <!-- FILTER BAR -->
 <div class="filter-bar">
   <label>BS Year:</label>
-  <select id="filterYear" onchange="renderAll()"></select>
+  <select id="filterYear" onchange="onFilterChange()"></select>
   <label>BS Month:</label>
-  <select id="filterMonth" onchange="renderAll()"></select>
-  <label style="margin-left:auto; color:#aaa; font-size:0.75rem;" id="filterLabel"></label>
+  <select id="filterMonth" onchange="onFilterChange()"></select>
+  <span id="syncStatus" style="margin-left:auto;font-size:.72rem;color:#aaa"></span>
 </div>
 
-<!-- ══ SUMMARY TAB ══════════════════════════════════════════ -->
-<div id="tab-summary" class="tab-content active">
-
-  <!-- KPI Cards -->
-  <div class="kpi-row" id="kpiRow"></div>
-
-  <!-- Charts -->
-  <div class="charts-row">
-    <div class="card">
-      <div class="card-title">Expense Breakdown</div>
-      <div class="chart-wrap"><canvas id="expenseChart"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Income Breakdown</div>
-      <div class="chart-wrap"><canvas id="incomeChart"></canvas></div>
-    </div>
-  </div>
-
-  <!-- Progress bars -->
-  <div class="card">
-    <div class="card-title">Expenses vs Plan</div>
-    <div id="expProgressBars"></div>
-  </div>
-  <div class="card">
-    <div class="card-title">Income vs Plan</div>
-    <div id="incProgressBars"></div>
-  </div>
-
-  <!-- Expense Table -->
-  <div class="section-title">📤 Expenses</div>
-  <div class="card" style="overflow-x:auto">
-    <table class="budget-table" id="expTable">
-      <thead><tr>
-        <th>Category</th>
-        <th>Planned (रू)</th>
-        <th>Actual (रू)</th>
-        <th>Diff.</th>
-      </tr></thead>
-      <tbody></tbody>
-    </table>
-  </div>
-
-  <!-- Income Table -->
-  <div class="section-title">📥 Income</div>
-  <div class="card" style="overflow-x:auto">
-    <table class="budget-table" id="incTable">
-      <thead><tr>
-        <th>Category</th>
-        <th>Planned (रू)</th>
-        <th>Actual (रू)</th>
-        <th>Diff.</th>
-      </tr></thead>
-      <tbody></tbody>
-    </table>
-  </div>
+<!-- SUMMARY TAB -->
+<div id="tab-summary" class="tab active">
+  <div id="summaryContent"><div class="loader"><div class="spinner"></div>Loading from Google Sheets…</div></div>
 </div>
 
-<!-- ══ TRANSACTIONS TAB ══════════════════════════════════════ -->
-<div id="tab-transactions" class="tab-content">
-  <div style="display:flex; gap:10px; flex-wrap:wrap">
+<!-- TRANSACTIONS TAB -->
+<div id="tab-transactions" class="tab">
+  <div class="add-row">
     <button class="add-btn" onclick="openModal('expense')">＋ Add Expense</button>
-    <button class="add-btn income-btn" onclick="openModal('income')">＋ Add Income</button>
+    <button class="add-btn inc" onclick="openModal('income')">＋ Add Income</button>
   </div>
   <div class="card" style="overflow-x:auto">
-    <table class="trans-table">
+    <table class="ttable">
       <thead><tr>
         <th>Date (BS)</th><th>Type</th><th>Amount (रू)</th><th>Description</th><th>Category</th><th></th>
       </tr></thead>
       <tbody id="transBody"></tbody>
     </table>
-    <div id="transEmpty" class="empty-state" style="display:none">No transactions yet. Add your first one!</div>
+    <div id="transEmpty" class="empty" style="display:none">No transactions yet. Add your first one!</div>
   </div>
 </div>
 
-<!-- ══ SETTINGS TAB ══════════════════════════════════════════ -->
-<div id="tab-settings" class="tab-content">
-  <div class="card" style="margin-bottom:16px">
+<!-- SETTINGS TAB -->
+<div id="tab-settings" class="tab">
+  <div class="card">
     <div class="card-title">Starting Balance</div>
-    <div class="balance-input-wrap">
-      <span class="currency-prefix">रू</span>
-      <input type="number" id="startingBalance" min="0" value="1000">
-      <button class="save-bal-btn" onclick="saveStartingBalance()">Save</button>
+    <div class="bal-wrap">
+      <span>रू</span>
+      <input type="number" id="startBal" min="0" value="0">
+      <button class="save-btn" onclick="saveStartingBalance()">Save to Sheet</button>
     </div>
   </div>
-  <div class="settings-grid">
+  <div class="set-grid">
     <div class="card">
       <div class="card-title">Expense Categories</div>
       <ul class="cat-list" id="expCatList"></ul>
-      <div class="add-cat-row">
-        <input type="text" id="newExpCat" placeholder="New category...">
-        <button onclick="addCategory('expense')">Add</button>
-      </div>
     </div>
     <div class="card">
       <div class="card-title">Income Categories</div>
       <ul class="cat-list" id="incCatList"></ul>
-      <div class="add-cat-row">
-        <input type="text" id="newIncCat" placeholder="New category...">
-        <button onclick="addCategory('income')">Add</button>
-      </div>
     </div>
   </div>
-
-  <!-- Planned budgets -->
-  <div class="section-title">📋 Set Planned Budgets</div>
-  <div class="settings-grid">
+  <div class="sec-title">📋 Planned Budgets</div>
+  <div class="set-grid">
     <div class="card">
       <div class="card-title">Planned Expenses (रू)</div>
       <div id="plannedExpForm"></div>
@@ -387,52 +197,47 @@
       <div id="plannedIncForm"></div>
     </div>
   </div>
-  <div style="text-align:center; margin-top:16px">
-    <button class="add-btn" style="display:inline-flex; margin:0 auto" onclick="savePlanned()">💾 Save Planned Budgets</button>
+  <div style="text-align:center;margin-top:14px">
+    <button class="add-btn" style="display:inline-flex;margin:0 auto" onclick="savePlanned()">💾 Save Planned to Sheet</button>
   </div>
-
-  <div class="card" style="margin-top:16px; text-align:center">
-    <div class="card-title">Data Management</div>
-    <button onclick="exportData()" style="background:var(--dark);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;font-size:0.85rem;margin:4px">📥 Export JSON Backup</button>
-    <button onclick="document.getElementById('importFile').click()" style="background:#457b9d;color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;font-size:0.85rem;margin:4px">📤 Import JSON Backup</button>
-    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-    <br><br>
-    <button onclick="clearAllData()" style="background:var(--red);color:#fff;border:none;border-radius:8px;padding:9px 18px;cursor:pointer;font-size:0.85rem;margin:4px">🗑 Clear All Data</button>
+  <div class="card" style="margin-top:14px;text-align:center">
+    <div class="card-title">Sync</div>
+    <button onclick="loadAll()" class="add-btn" style="display:inline-flex;margin:0 auto;background:var(--dark)">🔄 Refresh from Google Sheets</button>
   </div>
 </div>
 
-<!-- ══ ADD TRANSACTION MODAL ══════════════════════════════════ -->
-<div class="modal-overlay" id="modal">
+<!-- MODAL -->
+<div class="overlay" id="modal">
   <div class="modal">
     <h2 id="modalTitle">Add Expense</h2>
-    <div class="form-group">
+    <div class="fg">
       <label>BS Date</label>
-      <input type="text" id="txDate" placeholder="e.g. 2083/01/15" readonly onclick="toggleCal()" autocomplete="off">
-      <div class="np-date-display" id="npDateDisplay"></div>
-      <div class="np-cal" id="npCal">
-        <div class="np-cal-nav">
-          <button onclick="calPrev()">&#8249;</button>
-          <span id="calMonthLabel"></span>
-          <button onclick="calNext()">&#8250;</button>
+      <input type="text" id="txDate" placeholder="Tap to pick date" readonly onclick="toggleCal()">
+      <div class="date-disp" id="dateDisp"></div>
+      <div class="npcal" id="npcal">
+        <div class="npcal-nav">
+          <button onclick="calPrev(event)">&#8249;</button>
+          <span id="calLbl"></span>
+          <button onclick="calNext(event)">&#8250;</button>
         </div>
-        <div class="np-cal-grid" id="calGrid"></div>
+        <div class="npcal-grid" id="calGrid"></div>
       </div>
     </div>
-    <div class="form-group">
+    <div class="fg">
       <label>Amount (रू)</label>
-      <input type="number" id="txAmount" placeholder="0" min="0">
+      <input type="number" id="txAmt" placeholder="0" min="0">
     </div>
-    <div class="form-group">
+    <div class="fg">
       <label>Description</label>
       <input type="text" id="txDesc" placeholder="What was it for?">
     </div>
-    <div class="form-group">
+    <div class="fg">
       <label>Category</label>
-      <select id="txCategory"></select>
+      <select id="txCat"></select>
     </div>
-    <div class="modal-actions">
+    <div class="mactions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-save" id="saveBtn" onclick="saveTransaction()">Save</button>
+      <button class="btn-save" id="saveBtn" onclick="saveTransaction()">Save to Sheet</button>
     </div>
   </div>
 </div>
@@ -440,209 +245,91 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- ══ CHART.JS (CDN) ══════════════════════════════════════════ -->
+<!-- CHART.JS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
 <script>
 // ══════════════════════════════════════════════════════════════
-// DATA LAYER
+// CONFIG — replace with your deployed Web App URL
 // ══════════════════════════════════════════════════════════════
-const STORAGE_KEY = 'np_budget_v1';
+const API = 'YOUR_WEB_APP_URL_HERE';
 
-const DEFAULT_DATA = {
-  startingBalance: 1000,
-  expenseCategories: ['Food','Gifts','Health/Medical','Home','Transportation','Personal','Pets','Utilities','Travel','Debt','Other'],
-  incomeCategories:  ['Savings','Paycheck','Bonus','Interest','Other'],
-  planned: { expense: {}, income: {} },
-  transactions: []
+// ══════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════
+let CONFIG = {
+  startBal: 0, bsYear: 2083, bsMonth: 'Baisakh',
+  expCats: [], incCats: [], expPlanned: {}, incPlanned: {}
 };
-
-function loadData() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULT_DATA));
-  } catch(e) { return JSON.parse(JSON.stringify(DEFAULT_DATA)); }
-}
-function saveData(d) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
-}
-
-let DB = loadData();
+let TRANSACTIONS = [];
+let modalType    = 'expense';
+let expChart     = null;
+let incChart     = null;
 
 // ══════════════════════════════════════════════════════════════
-// NEPALI CALENDAR ENGINE
+// NEPALI CALENDAR
 // ══════════════════════════════════════════════════════════════
-const BS_MONTH_NAMES = ['Baisakh','Jestha','Ashadh','Shrawan','Bhadra','Ashwin',
-                        'Kartik','Mangsir','Poush','Magh','Falgun','Chaitra'];
-const BS_MONTH_NP   = ['बैशाख','जेठ','असार','साउन','भदौ','असोज',
-                        'कार्तिक','मंसिर','पुष','माघ','फागुन','चैत'];
-const DAY_NAMES     = ['Su','Mo','Tu','We','Th','Fr','Sa'];
-
-// Days per month for BS years 2075–2090
-const BS_DATA = {
-  2075:[31,32,31,32,31,30,30,30,29,30,29,31],
-  2076:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2077:[31,31,32,32,31,30,30,29,30,29,30,30],
-  2078:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2079:[31,31,31,32,31,31,29,30,29,30,29,31],
-  2080:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2081:[31,31,32,32,31,30,30,29,30,29,30,30],
-  2082:[31,32,31,32,31,30,30,30,29,30,29,31],
-  2083:[31,31,32,31,31,30,30,30,29,30,29,31],
-  2084:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2085:[31,31,32,32,31,30,30,29,30,29,30,30],
-  2086:[31,32,31,32,31,30,30,30,29,29,30,31],
-  2087:[30,32,31,32,31,30,30,30,29,30,29,31],
-  2088:[31,31,32,31,31,30,30,30,29,30,29,31],
-  2089:[31,31,32,31,31,31,30,29,30,29,30,30],
-  2090:[31,32,31,32,31,30,30,29,30,29,30,30]
+const BS_MONTHS = ['Baisakh','Jestha','Ashadh','Shrawan','Bhadra','Ashwin',
+                   'Kartik','Mangsir','Poush','Magh','Falgun','Chaitra'];
+const BS_DATA   = {
+  2075:[31,32,31,32,31,30,30,30,29,30,29,31],2076:[31,31,32,31,31,31,30,29,30,29,30,30],
+  2077:[31,31,32,32,31,30,30,29,30,29,30,30],2078:[31,32,31,32,31,30,30,30,29,29,30,31],
+  2079:[31,31,31,32,31,31,29,30,29,30,29,31],2080:[31,31,32,31,31,31,30,29,30,29,30,30],
+  2081:[31,31,32,32,31,30,30,29,30,29,30,30],2082:[31,32,31,32,31,30,30,30,29,30,29,31],
+  2083:[31,31,32,31,31,30,30,30,29,30,29,31],2084:[31,31,32,31,31,31,30,29,30,29,30,30],
+  2085:[31,31,32,32,31,30,30,29,30,29,30,30],2086:[31,32,31,32,31,30,30,30,29,29,30,31],
+  2087:[30,32,31,32,31,30,30,30,29,30,29,31],2088:[31,31,32,31,31,30,30,30,29,30,29,31],
+  2089:[31,31,32,31,31,31,30,29,30,29,30,30],2090:[31,32,31,32,31,30,30,29,30,29,30,30]
 };
-// 1 Baisakh 2083 = 14 April 2026 = Tuesday (weekday index 2)
-const ANCHOR_Y = 2083, ANCHOR_M = 1, ANCHOR_WD = 2;
+const ANCHOR_Y=2083,ANCHOR_WD=2; // 1 Baisakh 2083 = Tuesday
 
-function bsDaysInMonth(y, m) { return (BS_DATA[y] || BS_DATA[2083])[m-1] || 30; }
-
-function totalBsDays(toY, toM) {
-  let d = 0;
-  for (let y = ANCHOR_Y; y < toY; y++) {
-    const data = BS_DATA[y] || BS_DATA[2083];
-    data.forEach(x => d += x);
-  }
-  for (let m = 1; m < toM; m++) d += bsDaysInMonth(toY, m);
+function bsDIM(y,m){return(BS_DATA[y]||BS_DATA[2083])[m-1]||30}
+function totalDays(y,m){
+  let d=0;
+  for(let yr=ANCHOR_Y;yr<y;yr++){(BS_DATA[yr]||BS_DATA[2083]).forEach(x=>d+=x)}
+  for(let mo=1;mo<m;mo++)d+=bsDIM(y,mo);
   return d;
 }
-
-function startWeekday(y, m) {
-  const diff = totalBsDays(y, m);
-  return (ANCHOR_WD + diff) % 7;
+function startWD(y,m){return(ANCHOR_WD+totalDays(y,m))%7}
+function todayBS(){
+  const now=new Date(),anchor=new Date(2026,3,14);
+  let rem=Math.floor((now-anchor)/86400000),y=2083,m=1;
+  while(rem>0){const d=bsDIM(y,m);if(rem<d){return{y,m,d:1+rem};} rem-=d;m++;if(m>12){m=1;y++;}}
+  return{y,m,d:1};
 }
 
-function todayBS() {
-  // Approximate today in BS (rough conversion, good enough for display)
-  const now = new Date();
-  // AD to BS: approximate offset is BS = AD + 56 years + ~8 months
-  // We'll compute by counting from anchor AD date
-  const anchorAD = new Date(2026, 3, 14); // 14 April 2026
-  const diffMs = now - anchorAD;
-  const diffDays = Math.floor(diffMs / 86400000);
-  let y = ANCHOR_Y, m = ANCHOR_M, d = 1;
-  let rem = diffDays;
-  while (rem > 0) {
-    const dim = bsDaysInMonth(y, m);
-    if (rem < dim) { d = 1 + rem; rem = 0; }
-    else { rem -= dim; m++; if (m > 12) { m = 1; y++; } }
-  }
-  return { y, m, d };
-}
-
-// Calendar widget state
-let calYear, calMonth, calSelY, calSelM, calSelD, calModalType;
-
-function initCal() {
-  const t = todayBS();
-  calYear = t.y; calMonth = t.m;
-  calSelY = null; calSelM = null; calSelD = null;
-}
-
-function renderCal() {
-  document.getElementById('calMonthLabel').textContent = BS_MONTH_NAMES[calMonth-1] + ' ' + calYear;
-  const grid = document.getElementById('calGrid');
-  grid.innerHTML = '';
-  DAY_NAMES.forEach(d => {
-    const h = document.createElement('div');
-    h.className = 'day-head'; h.textContent = d; grid.appendChild(h);
-  });
-  const start = startWeekday(calYear, calMonth);
-  for (let i = 0; i < start; i++) {
-    const e = document.createElement('div'); e.className = 'day-cell empty'; grid.appendChild(e);
-  }
-  const days = bsDaysInMonth(calYear, calMonth);
-  for (let d = 1; d <= days; d++) {
-    const cell = document.createElement('div');
-    cell.className = 'day-cell';
-    if (calSelY === calYear && calSelM === calMonth && calSelD === d) cell.classList.add('selected');
-    cell.textContent = d;
-    cell.onclick = () => selectCalDay(d);
-    grid.appendChild(cell);
+let calY,calM,selY,selM,selD;
+function initCal(){const t=todayBS();calY=t.y;calM=t.m;selY=null;selM=null;selD=null;}
+function renderCal(){
+  document.getElementById('calLbl').textContent=BS_MONTHS[calM-1]+' '+calY;
+  const g=document.getElementById('calGrid'); g.innerHTML='';
+  ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d=>{const h=document.createElement('div');h.className='dhead';h.textContent=d;g.appendChild(h);});
+  const sw=startWD(calY,calM);
+  for(let i=0;i<sw;i++){const e=document.createElement('div');e.className='dcell emp';g.appendChild(e);}
+  const days=bsDIM(calY,calM);
+  for(let d=1;d<=days;d++){
+    const c=document.createElement('div');c.className='dcell';
+    if(selY===calY&&selM===calM&&selD===d)c.classList.add('sel');
+    c.textContent=d;c.onclick=()=>pickDay(d);g.appendChild(c);
   }
 }
-
-function calPrev() { calMonth--; if(calMonth<1){calMonth=12;calYear--;} renderCal(); }
-function calNext() { calMonth++; if(calMonth>12){calMonth=1;calYear++;} renderCal(); }
-
-function selectCalDay(d) {
-  calSelY = calYear; calSelM = calMonth; calSelD = d;
-  const dateStr = calYear + '/' + String(calMonth).padStart(2,'0') + '/' + String(d).padStart(2,'0');
-  document.getElementById('txDate').value = dateStr;
-  document.getElementById('npDateDisplay').textContent =
-    d + ' ' + BS_MONTH_NAMES[calMonth-1] + ' ' + calYear + ' (' + BS_MONTH_NP[calMonth-1] + ')';
-  document.getElementById('npCal').classList.remove('open');
+function calPrev(e){if(e)e.preventDefault();calM--;if(calM<1){calM=12;calY--;}renderCal();}
+function calNext(e){if(e)e.preventDefault();calM++;if(calM>12){calM=1;calY++;}renderCal();}
+function pickDay(d){
+  selY=calY;selM=calM;selD=d;
+  const s=calY+'/'+String(calM).padStart(2,'0')+'/'+String(d).padStart(2,'0');
+  document.getElementById('txDate').value=s;
+  document.getElementById('dateDisp').textContent=d+' '+BS_MONTHS[calM-1]+' '+calY;
+  document.getElementById('npcal').classList.remove('open');
   renderCal();
 }
-
-function toggleCal() {
-  const cal = document.getElementById('npCal');
-  cal.classList.toggle('open');
-  if (cal.classList.contains('open')) renderCal();
+function toggleCal(){
+  const c=document.getElementById('npcal');c.classList.toggle('open');
+  if(c.classList.contains('open'))renderCal();
 }
 
 // ══════════════════════════════════════════════════════════════
-// FILTER BAR INIT
+// API CALLS
 // ══════════════════════════════════════════════════════════════
-function initFilters() {
-  const yearSel = document.getElementById('filterYear');
-  const monthSel = document.getElementById('filterMonth');
-  yearSel.innerHTML = '';
-  for (let y = 2075; y <= 2090; y++) {
-    const o = document.createElement('option');
-    o.value = y; o.textContent = y;
-    yearSel.appendChild(o);
-  }
-  BS_MONTH_NAMES.forEach((name, i) => {
-    const o = document.createElement('option');
-    o.value = i + 1; o.textContent = name;
-    monthSel.appendChild(o);
-  });
-  const t = todayBS();
-  yearSel.value = t.y;
-  monthSel.value = t.m;
-}
-
-function getFilter() {
-  return {
-    year:  parseInt(document.getElementById('filterYear').value),
-    month: parseInt(document.getElementById('filterMonth').value)
-  };
-}
-
-function dateMatchesFilter(dateStr) {
-  if (!dateStr) return false;
-  const f = getFilter();
-  const prefix = f.year + '/' + String(f.month).padStart(2,'0');
-  return dateStr.startsWith(prefix);
-}
-
-// ══════════════════════════════════════════════════════════════
-// CALCULATIONS
-// ══════════════════════════════════════════════════════════════
-function calcActuals() {
-  const expActual = {}, incActual = {};
-  DB.expenseCategories.forEach(c => expActual[c] = 0);
-  DB.incomeCategories.forEach(c => incActual[c] = 0);
-  DB.transactions.forEach(tx => {
-    if (!dateMatchesFilter(tx.date)) return;
-    const amt = parseFloat(tx.amount) || 0;
-    if (tx.type === 'expense') expActual[tx.category] = (expActual[tx.category] || 0) + amt;
-    else                       incActual[tx.category]  = (incActual[tx.category]  || 0) + amt;
-  });
-  return { expActual, incActual };
-}
-
-function calcTotals() {
-  const { expActual, incActual } = calcActuals();
-  const totalExpActual  = Object.values(expActual).reduce((a,b) => a+b, 0);
-  const totalIncActual  = Object.values(incActual).reduce((a,b) => a+b, 0);
-  const totalExpPlanned = DB.expenseCategories.reduce((s,c) => s + (parseFloat(DB.planned.expense[c])||0), 0);
-  const totalIncPlanned = DB.incomeCategories.reduce((s,c) => s + (parseFloat(DB.planned.income[c])||0), 0);
-  const endBalance = DB.startingBalance + totalIncActual - totalExpActual;
-  const savedThisMonth
+async function apiGet(action){
+  const r=await fetch(`${API}?action=${
